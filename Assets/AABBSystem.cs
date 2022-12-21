@@ -28,11 +28,24 @@ public class AABBSystem : MonoBehaviour
                 AABBCollider comparedCollider = _AABBColliders[j];
 
                 if (currentCollider == comparedCollider) continue;
-
-                if (AABBIntersection(currentCollider, comparedCollider))
+                if (!AABBIntersection(currentCollider, comparedCollider))
                 {
-                    print(currentCollider + " Collided with " + comparedCollider);
+                    if (currentCollider.isColliding && currentCollider.updateEvents) currentCollider.OnAABBCollisionExit();
+                    currentCollider.isColliding = false;
+                    continue;
                 }
+
+                if (!currentCollider.updateEvents) continue;
+
+                if(currentCollider.isColliding)
+                {
+                    currentCollider.OnAABBCollisionStay();
+                }
+                else
+                {
+                    currentCollider.OnAABBCollisionEnter();
+                }
+
             }
         }
     }
