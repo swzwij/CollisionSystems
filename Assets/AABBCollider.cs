@@ -12,8 +12,8 @@ public class AABBCollider : MonoBehaviour
     private Vector2 pos;
     private Color color = Color.green;
 
-    [Header("Collision Events")]
-    public bool updateEvents = true;
+    [Space]
+    public bool hasCollisionEvents = true;
     [SerializeField] private UnityEvent onAABBEnter = new UnityEvent();
     [SerializeField] private UnityEvent onAABBExit = new UnityEvent();
     [SerializeField] private UnityEvent onAABBStay = new UnityEvent();
@@ -44,6 +44,7 @@ public class AABBCollider : MonoBehaviour
 
     public void OnAABBCollisionExit()
     {
+        isColliding = false;
         onAABBExit?.Invoke();
         print("OnCollisionExit");
     }

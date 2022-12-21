@@ -28,16 +28,16 @@ public class AABBSystem : MonoBehaviour
                 AABBCollider comparedCollider = _AABBColliders[j];
 
                 if (currentCollider == comparedCollider) continue;
+
                 if (!AABBIntersection(currentCollider, comparedCollider))
                 {
-                    if (currentCollider.isColliding && currentCollider.updateEvents) currentCollider.OnAABBCollisionExit();
-                    currentCollider.isColliding = false;
+                    if (currentCollider.isColliding && currentCollider.hasCollisionEvents) currentCollider.OnAABBCollisionExit();
                     continue;
                 }
 
-                if (!currentCollider.updateEvents) continue;
-
-                if(currentCollider.isColliding)
+                if (!currentCollider.hasCollisionEvents) continue;
+                
+                if (currentCollider.isColliding)
                 {
                     currentCollider.OnAABBCollisionStay();
                 }
@@ -45,7 +45,6 @@ public class AABBSystem : MonoBehaviour
                 {
                     currentCollider.OnAABBCollisionEnter();
                 }
-
             }
         }
     }
