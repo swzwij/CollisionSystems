@@ -7,7 +7,7 @@ public class AABBCollider : MonoBehaviour
 
     [HideInInspector] public Vector2 _minPos;
     [HideInInspector] public Vector2 _maxPos;
-    [HideInInspector] public bool isColliding;
+    public bool isColliding;
 
     private Vector2 pos;
     private Color color = Color.green;
@@ -35,7 +35,7 @@ public class AABBCollider : MonoBehaviour
         _maxPos.y = pos.y + colliderSize.y;
     }
 
-    public void OnAABBCollisionEnter()
+    /*public void OnAABBCollisionEnter()
     {
         isColliding = true;
         onAABBEnter?.Invoke();
@@ -53,7 +53,7 @@ public class AABBCollider : MonoBehaviour
     {
         onAABBStay?.Invoke();
         print("OnCollisionStay");
-    }
+    }*/
 
     private void OnDrawGizmos()
     {

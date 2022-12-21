@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class AABBSystem : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class AABBSystem : MonoBehaviour
     private void Update()
     {
         int l = _AABBColliders.Count;
-        for (int i = 0; i < l; i++)
+        for (int i = l - 1; i >= 0; i--)
         {
             AABBCollider currentCollider = _AABBColliders[i];
 
@@ -29,22 +30,15 @@ public class AABBSystem : MonoBehaviour
 
                 if (currentCollider == comparedCollider) continue;
 
-                if (!AABBIntersection(currentCollider, comparedCollider))
+                if(!AABBIntersection(currentCollider, comparedCollider))
                 {
-                    if (currentCollider.isColliding && currentCollider.hasCollisionEvents) currentCollider.OnAABBCollisionExit();
+                    currentCollider.isColliding = false;
                     continue;
                 }
 
-                if (!currentCollider.hasCollisionEvents) continue;
-                
-                if (currentCollider.isColliding)
-                {
-                    currentCollider.OnAABBCollisionStay();
-                }
-                else
-                {
-                    currentCollider.OnAABBCollisionEnter();
-                }
+                currentCollider.isColliding = true;
+
+                print(currentCollider + " is colliding with " + comparedCollider);
             }
         }
     }
