@@ -1,67 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Profiling;
 
 public class AABB : MonoBehaviour
 {
-    [SerializeField] private Vector2 size;
+    private Vector2 _size => _AABBCollider.colliderSize;
+    public Vector2 _minPos;
+    public Vector2 _maxPos;
+    
+    [SerializeField] private AABB otherBox;
+    private AABBCollider _AABBCollider;
 
-    private float xMinPos;
-    private float xMaxPos;
-    private float yMinPos;
-    private float yMaxPos;
+    [SerializeField] private UnityEvent onStay = new UnityEvent();
 
-    public AABB otherBox;
-
-    private Color defaultColor = Color.green;
+    private void Awake()
+    {
+        _AABBCollider= GetComponent<AABBCollider>();
+    }
 
     private void Update()
     {
+        Profiler.BeginSample("AHAHAHA");
         UpdateSize();
+
         if (AABBIntersection(this, otherBox))
         {
-            print("Collide");
-            defaultColor = Color.red;
+            print("COlliding");
+            onStay?.Invoke();
         }
-        else
-        {
-            defaultColor = Color.green;
-        }
+
+        Profiler.EndSample();
     }
 
     private bool AABBIntersection(AABB a, AABB b)
     {
-        if (a.xMinPos > b.xMaxPos) return false;
-        if (a.xMaxPos < b.xMinPos) return false;
+        // X axis
+        if (a._minPos.x > b._maxPos.x) return false;
+        if (a._maxPos.x < b._minPos.x) return false;
 
-        if (a.yMinPos > b.yMaxPos) return false;
-        if (a.yMaxPos < b.yMinPos) return false;
+        // Y axis
+        if (a._minPos.y > b._maxPos.y) return false;
+        if (a._maxPos.y < b._minPos.y) return false;
 
         return true;
     }
 
     private void UpdateSize()
     {
-        yMinPos = transform.position.y;
-        xMinPos = transform.position.x;
+        // X position
+        _minPos.x = transform.position.x;
+        _maxPos.x = transform.position.x + _size.x;
 
-        xMaxPos = transform.position.x + size.x;
-        yMaxPos = transform.position.y + size.y;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Vector2 pos = transform.position;
-
-        Gizmos.color = defaultColor;
-
-        // Main lines
-        Gizmos.DrawLine(pos, pos + new Vector2(0, size.y));
-        Gizmos.DrawLine(pos, pos + new Vector2(size.x, 0));
-
-        // Fill Lines
-        Gizmos.DrawLine(pos + new Vector2(0, size.y), pos + new Vector2(size.x, size.y));
-        Gizmos.DrawLine(pos + new Vector2(size.x, 0), pos + new Vector2(size.x, size.y));
+        // Y position
+        _minPos.y = transform.position.y;
+        _maxPos.y = transform.position.y + _size.y;
     }
 }
